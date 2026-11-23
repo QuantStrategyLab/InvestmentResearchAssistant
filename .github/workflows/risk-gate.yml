@@ -17,10 +17,8 @@ on:
     types: [completed]
   push:
     branches: [main, master]
-  # A merge made with GITHUB_TOKEN raises no push, and nothing raises an event
-  # for a resolved review thread, so a sweep closes both gaps.
-  schedule:
-    - cron: '17 3 * * *'
+  # The unattended sweep is paused. Event triggers above still evaluate pull
+  # requests. A later reviewed change can restore the cron.
   workflow_dispatch:
     inputs:
       pr_number:

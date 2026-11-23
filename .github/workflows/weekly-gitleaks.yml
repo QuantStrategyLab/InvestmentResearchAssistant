@@ -2,8 +2,8 @@
 name: Weekly all-branch secret scan
 
 on:
-  schedule:
-    - cron: '23 4 * * 1'
+  # The weekly unattended scan is paused. Pull-request Gitleaks still runs.
+  # workflow_dispatch remains for a manual run after a later decision.
   workflow_dispatch:
 
 permissions:

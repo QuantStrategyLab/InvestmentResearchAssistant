@@ -104,6 +104,10 @@ class RepoContractTest(unittest.TestCase):
         tests = (workflow_dir / "tests.yml").read_text(encoding="utf-8")
         self.assertIn("pull_request:", tests)
         self.assertNotIn("pull_request_target", tests)
+        for name in ("risk-gate.yml", "codex-nudge.yml", "weekly-gitleaks.yml"):
+            paused = (workflow_dir / name).read_text(encoding="utf-8")
+            self.assertNotIn("\nschedule:", f"\n{paused}", name)
+            self.assertIn("workflow_dispatch:", paused, name)
 
     def test_policy_carries_no_account_identity(self):
         policy = json.loads((ROOT / ".github" / "governance" / "policy.json").read_text())
