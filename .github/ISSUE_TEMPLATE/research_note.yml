@@ -1,0 +1,21 @@
+name: Research note
+description: Public note about the research workflow. Do not include private data.
+title: "[research] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste holdings, account identifiers, watchlists, credentials, or private decision logs.
+  - type: textarea
+    attributes:
+      label: What should change
+      description: Describe the public workflow or document change.
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Private data
+      options:
+        - label: This report contains no holdings, account data, or credentials
+          required: true

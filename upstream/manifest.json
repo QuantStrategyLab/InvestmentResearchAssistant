@@ -1,0 +1,71 @@
+{
+  "description": "Pinned upstream originals. Digests are of the vendored bytes. Adapters live outside third_party and do not modify these files.",
+  "org_docs_commit": "1de428f00aeef77ba939edfd3420b202c7166953",
+  "org_docs_url": "https://github.com/QuantStrategyLab/.github",
+  "pr_governance_commit": "3d44e3d057681d5ae2730ad76af2f53b72d26767",
+  "pr_governance_url": "https://github.com/Pigbibi/PrGovernance",
+  "sources": [
+    {
+      "name": "InvestSkill",
+      "url": "https://github.com/yennanliu/InvestSkill",
+      "commit": "4d61af4ae5545a8fae8a78642c4f1a56ea3a20ec",
+      "license": "MIT",
+      "license_path": "third_party/investskill/LICENSE",
+      "copyright": "Copyright (c) 2026 yennanliu",
+      "files": [
+        {
+          "upstream_path": "plugins/us-stock-analysis/skills/fact-check/SKILL.md",
+          "vendor_path": "third_party/investskill/plugins/us-stock-analysis/skills/fact-check/SKILL.md",
+          "bytes": 30425,
+          "sha256": "2879fb3d1c5a9723b711fd410205d85f9885ee596fefa372f632b5e55d86c3ac",
+          "git_blob_sha1": "d05afe745ff47e560286798442ec57d486dc1492"
+        },
+        {
+          "upstream_path": "plugins/us-stock-analysis/skills/earnings-preview/SKILL.md",
+          "vendor_path": "third_party/investskill/plugins/us-stock-analysis/skills/earnings-preview/SKILL.md",
+          "bytes": 26592,
+          "sha256": "e1eb92219ae8d8512321ea0a887eb702e1c151298a754034aac1a16fb860c1bc",
+          "git_blob_sha1": "b642458b0490b12fbd43500f9730d81b9c6eab08"
+        },
+        {
+          "upstream_path": "plugins/us-stock-analysis/skills/catalyst-calendar/SKILL.md",
+          "vendor_path": "third_party/investskill/plugins/us-stock-analysis/skills/catalyst-calendar/SKILL.md",
+          "bytes": 20867,
+          "sha256": "7638c5bd4b7b3460fac50f330d5035f3a745780893ab41b16715ffaceb908c82",
+          "git_blob_sha1": "5272db0b540dfc03478c03fab16c443c27d33994"
+        },
+        {
+          "upstream_path": "plugins/us-stock-analysis/skills/bear-case/SKILL.md",
+          "vendor_path": "third_party/investskill/plugins/us-stock-analysis/skills/bear-case/SKILL.md",
+          "bytes": 17003,
+          "sha256": "c9088c13dcd142ac5d3c9f893ed6e0352235c5f42cb6336712064590882ea148",
+          "git_blob_sha1": "3363a26780543a842bd273b5124f722ad9e777ba"
+        },
+        {
+          "upstream_path": "plugins/us-stock-analysis/skills/etf-analysis/SKILL.md",
+          "vendor_path": "third_party/investskill/plugins/us-stock-analysis/skills/etf-analysis/SKILL.md",
+          "bytes": 26887,
+          "sha256": "cc89233745abd4e12918489eacbacb0ec8c0add38d1756f2cca3aac3f6de7811",
+          "git_blob_sha1": "a0a40502e29f85d281adaf1e7e7014dc2c1668cb"
+        }
+      ]
+    },
+    {
+      "name": "grok-research",
+      "url": "https://github.com/jaredtrichard/grok-research",
+      "commit": "d3d4b493d4d66cc08c31e13626ac3e750613c8b2",
+      "license": "MIT",
+      "license_path": "third_party/grok-research/LICENSE",
+      "copyright": "Copyright (c) 2026 Kun Chen; Copyright (c) 2026 grok-research",
+      "files": [
+        {
+          "upstream_path": "skills/adversarial-review/SKILL.md",
+          "vendor_path": "third_party/grok-research/skills/adversarial-review/SKILL.md",
+          "bytes": 4046,
+          "sha256": "8f35223bfa06d2a01f32c6e592b3067d3a2f0540311406f85397d5f33b6e73ab",
+          "git_blob_sha1": "fd6d2717ffbf61d35eb74f45f493731bec7cc505"
+        }
+      ]
+    }
+  ]
+}

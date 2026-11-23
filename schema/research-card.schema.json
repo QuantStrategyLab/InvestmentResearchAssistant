@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/QuantStrategyLab/InvestmentResearchAssistant/schema/research-card.schema.json",
+  "title": "ResearchCard",
+  "description": "Public research record. execution_allowed is fixed false. No order, account, or position-size fields.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "as_of",
+    "source_times",
+    "ticker",
+    "exchange",
+    "claim",
+    "evidence_state",
+    "primary_evidence",
+    "counter_evidence",
+    "confidence_reason",
+    "missing_data",
+    "invalidation",
+    "next_review",
+    "execution_allowed"
+  ],
+  "properties": {
+    "as_of": {"type": "string", "minLength": 20},
+    "source_times": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "at", "url"],
+        "properties": {
+          "role": {"enum": ["published", "retrieved"]},
+          "at": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    },
+    "ticker": {"type": "string", "minLength": 1},
+    "exchange": {"type": "string", "minLength": 1},
+    "claim": {"type": "string", "minLength": 1},
+    "evidence_state": {
+      "enum": [
+        "supported",
+        "unavailable",
+        "blocked",
+        "stale",
+        "rumor",
+        "duplicate",
+        "contradicted",
+        "abstain"
+      ]
+    },
+    "primary_evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "counter_evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "confidence_reason": {"type": "string", "minLength": 20},
+    "missing_data": {"type": "array", "items": {"type": "string"}},
+    "invalidation": {"type": "string", "minLength": 1},
+    "next_review": {"type": "string", "minLength": 10},
+    "execution_allowed": {"const": false},
+    "financial_figures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "value", "unit", "source_url", "published_at", "retrieved_at"],
+        "properties": {
+          "name": {"type": "string"},
+          "value": {"type": "string"},
+          "unit": {"type": "string"},
+          "source_url": {"type": "string"},
+          "published_at": {"type": "string"},
+          "retrieved_at": {"type": "string"}
+        }
+      }
+    },
+    "canonical_url": {"type": "string"},
+    "synthetic": {"const": true}
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    }
+  }
+}
