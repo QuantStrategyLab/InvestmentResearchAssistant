@@ -290,6 +290,80 @@ class ResearchCardContractTest(unittest.TestCase):
         )
         self.assertTrue(any("published" in error for error in validate_card(card)))
 
+    def test_rumor_allows_an_explicit_denial_of_verification(self):
+        denied = valid_card(
+            evidence_state="rumor",
+            primary_evidence=[{"url": "https://example.test/social/post"}],
+            source_times=[
+                {
+                    "role": "published",
+                    "at": _time("2026-11-19"),
+                    "url": "https://example.test/social/post",
+                },
+                {
+                    "role": "retrieved",
+                    "at": _time("2026-11-20"),
+                    "url": "https://example.test/social/post",
+                },
+            ],
+            confidence_reason="This rumor is not confirmed by any primary source.",
+        )
+        self.assertEqual(validate_card(denied), [])
+        denied["confidence_reason"] = "这条传闻尚未获得一手来源支持，不能视为已证实。"
+        self.assertEqual(validate_card(denied), [])
+
+    def test_non_string_evidence_state_returns_errors(self):
+        for value in ([], {}):
+            errors = validate_card(valid_card(evidence_state=value))
+            self.assertTrue(errors, value)
+            self.assertTrue(any("evidence_state" in error for error in errors), errors)
+
+    def test_unrelated_recent_time_does_not_refresh_the_primary_url(self):
+        card = valid_card(
+            primary_evidence=[{"url": "https://example.test/issuer/old"}],
+            source_times=[
+                {
+                    "role": "published",
+                    "at": _time("2025-01-01"),
+                    "url": "https://example.test/issuer/old",
+                },
+                {
+                    "role": "retrieved",
+                    "at": _time("2026-11-20"),
+                    "url": "https://example.test/issuer/old",
+                },
+                {
+                    "role": "published",
+                    "at": _time("2026-11-19"),
+                    "url": "https://example.test/other",
+                },
+                {
+                    "role": "retrieved",
+                    "at": _time("2026-11-20"),
+                    "url": "https://example.test/other",
+                },
+            ],
+        )
+        self.assertTrue(any("stale" in error for error in validate_card(card)))
+
+    def test_primary_url_needs_its_own_retrieved_time(self):
+        card = valid_card(
+            source_times=[
+                {
+                    "role": "published",
+                    "at": _time("2026-11-18"),
+                    "url": "https://example.test/issuer/release",
+                },
+                {
+                    "role": "retrieved",
+                    "at": _time("2026-11-20"),
+                    "url": "https://example.test/other",
+                },
+            ]
+        )
+        errors = validate_card(card)
+        self.assertTrue(any("retrieved" in error for error in errors), errors)
+
     def test_abstain_is_allowed_when_the_claim_is_not_asserted(self):
         errors = validate_card(
             valid_card(

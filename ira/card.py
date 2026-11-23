@@ -87,7 +87,10 @@ _BARE_PROBABILITY = re.compile(
     r"(?:\d+(?:\.\d+)?%?|high|medium|low|概率\s*[:：]\s*\d+(?:\.\d+)?)",
     re.IGNORECASE,
 )
-_RUMOR_VERIFIED = re.compile(r"\b(verified|confirmed)\b|已验证|已核实|已证实", re.IGNORECASE)
+_AFFIRMATIVE_VERIFIED = re.compile(r"\b(verified|confirmed)\b", re.IGNORECASE)
+_ENGLISH_NEGATION = re.compile(r"\b(not|never|no|without)\b|n't\s*$", re.IGNORECASE)
+_CHINESE_VERIFIED = re.compile(r"已验证|已核实|已证实")
+_CHINESE_NEGATION = ("未", "不能", "不是", "并非", "没有", "不可", "不算")
 
 
 def instrument_id(ticker: str, exchange: str) -> str:
@@ -134,7 +137,7 @@ def validate_card(card: Any, now: datetime | None = None) -> list[str]:
         errors.append("claim must be a non-empty string")
 
     state = card["evidence_state"]
-    if state not in EVIDENCE_STATES:
+    if not isinstance(state, str) or state not in EVIDENCE_STATES:
         errors.append("evidence_state is not a known state")
         return errors
 
@@ -177,17 +180,8 @@ def validate_card(card: Any, now: datetime | None = None) -> list[str]:
     elif state == "duplicate":
         errors.append("duplicate state requires canonical_url")
 
-    if state == "supported" and as_of is not None:
-        published = [item["at"] for item in times if item["role"] == "published"]
-        if published:
-            newest = max(published)
-            age_days = (as_of.date() - newest.date()).days
-            if age_days > MAX_SUPPORTED_AGE_DAYS:
-                errors.append(
-                    f"published source is stale: {age_days} days before as_of"
-                )
-            if newest > as_of:
-                errors.append("published time is after as_of")
+    if state == "supported":
+        _primary_freshness(primary_urls, times, as_of, errors)
 
     for item in times:
         if as_of is not None and item["at"] > as_of and item["role"] == "retrieved":
@@ -306,8 +300,53 @@ def _confidence(value: Any, state: str, errors: list[str]) -> None:
         return
     if _BARE_PROBABILITY.fullmatch(value.strip()):
         errors.append("confidence_reason must not be a bare probability or score")
-    if state == "rumor" and _RUMOR_VERIFIED.search(value):
+    if state == "rumor" and _affirms_verification(value):
         errors.append("rumor state cannot be described as verified")
+
+
+def _affirms_verification(text: str) -> bool:
+    for match in _AFFIRMATIVE_VERIFIED.finditer(text):
+        prefix = text[max(0, match.start() - 32) : match.start()]
+        if _ENGLISH_NEGATION.search(prefix):
+            continue
+        return True
+    for match in _CHINESE_VERIFIED.finditer(text):
+        prefix = text[max(0, match.start() - 16) : match.start()]
+        if any(token in prefix for token in _CHINESE_NEGATION):
+            continue
+        return True
+    return False
+
+
+def _primary_freshness(
+    primary_urls: set[str],
+    times: list[dict[str, Any]],
+    as_of: datetime | None,
+    errors: list[str],
+) -> None:
+    for url in sorted(primary_urls):
+        published = [
+            item["at"]
+            for item in times
+            if item["role"] == "published" and item["url"] == url
+        ]
+        retrieved = [
+            item["at"]
+            for item in times
+            if item["role"] == "retrieved" and item["url"] == url
+        ]
+        if not published:
+            errors.append(f"primary_evidence {url} has no published time")
+        if not retrieved:
+            errors.append(f"primary_evidence {url} has no retrieved time")
+        if not published or as_of is None:
+            continue
+        newest = max(published)
+        age_days = (as_of.date() - newest.date()).days
+        if age_days > MAX_SUPPORTED_AGE_DAYS:
+            errors.append(f"published source is stale: {age_days} days before as_of")
+        if newest > as_of:
+            errors.append("published time is after as_of")
 
 
 def _figures(value: Any, errors: list[str]) -> None:
