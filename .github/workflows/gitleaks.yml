@@ -1,0 +1,28 @@
+name: Secret scan
+
+# Caller copied from Pigbibi/PrGovernance templates/gitleaks.yml at 3d44e3d057681d5ae2730ad76af2f53b72d26767.
+# The job name is the required status check context; keep it as Gitleaks.
+# The scanner and its config come from the pinned governance action.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan added commits
+        uses: Pigbibi/PrGovernance/pr-governance@3d44e3d057681d5ae2730ad76af2f53b72d26767
+        with:
+          mode: scan

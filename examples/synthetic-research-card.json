@@ -1,0 +1,42 @@
+{
+  "as_of": "2026-11-20T00:00:00Z",
+  "source_times": [
+    {
+      "role": "published",
+      "at": "2026-11-18T00:00:00Z",
+      "url": "https://example.test/issuer/release"
+    },
+    {
+      "role": "retrieved",
+      "at": "2026-11-20T00:00:00Z",
+      "url": "https://example.test/issuer/release"
+    }
+  ],
+  "ticker": "SYNTH",
+  "exchange": "XNAS",
+  "claim": "Synthetic issuer page states a fact used only as a format example.",
+  "evidence_state": "supported",
+  "primary_evidence": [
+    {
+      "url": "https://example.test/issuer/release",
+      "note": "synthetic primary page"
+    }
+  ],
+  "counter_evidence": [],
+  "confidence_reason": "The synthetic primary page was retrieved and no contrary source was supplied.",
+  "missing_data": [],
+  "invalidation": "A later synthetic primary page that contradicts the claim.",
+  "next_review": "2026-11-27",
+  "execution_allowed": false,
+  "financial_figures": [
+    {
+      "name": "synthetic_revenue",
+      "value": "1",
+      "unit": "USD",
+      "source_url": "https://example.test/issuer/release",
+      "published_at": "2026-11-18T00:00:00Z",
+      "retrieved_at": "2026-11-20T00:00:00Z"
+    }
+  ],
+  "synthetic": true
+}
